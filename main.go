@@ -1,13 +1,29 @@
 package main
 
-import "github.com/gofiber/fiber/v2"
+import (
+	"flag"
+	"fmt"
+	"log"
+
+	"github.com/TimotteAA/go-starter/config"
+	"github.com/gofiber/fiber/v2"
+)
 
 func main() {
-	app := fiber.New()
+	var mode = "development"
+	flag.StringVar(&mode, "mode", "development", "Set the mode of app")
 
-	app.Get("/", func(c *fiber.Ctx) error {
-		return c.SendString("hello fiber")
+	flag.Parse()
+
+	config, err := config.InitConfig(mode)
+	if err != nil {
+		log.Fatal("Fail to load config")
+	}
+
+
+	app := fiber.New(fiber.Config{
+		AppName: config.AppName,
 	})
 
-	app.Listen(":9090")
+	app.Listen(fmt.Sprintf(":%s", config.AppPort))
 }

@@ -11,7 +11,7 @@ import (
 
 func main() {
 	var mode = "development"
-	flag.StringVar(&mode, "mode", "development", "Set the mode of app")
+	flag.StringVar(&mode, "mode", "development", "Set the mode of app, development or production")
 
 	flag.Parse()
 

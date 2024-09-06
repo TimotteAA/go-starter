@@ -36,13 +36,19 @@ type Config struct {
 	LogFileName     string
 	// 日志文件时间戳的格式
 	LogTimestampFmt string
-	// 日志最多保留时间
+	// 日志最多保留时间，天数
 	LogMaxAge       int
-	// 日志轮转时间
-	LogRotationTime int
+	// 日志最多保存数量
+	LogMaxBackups  int
+	// 日志最多保留大小，MB
+	LogMaxSize int
 	// 日志级别
 	LogLevel        string
 }
+
+var (
+	config *Config
+)
 
 func InitConfig(mode string) (*Config, error) {
 	var (
@@ -55,7 +61,7 @@ func InitConfig(mode string) (*Config, error) {
 		return nil, err
 	}
 
-	config := &Config{
+	config = &Config{
 		AppName: os.Getenv("APP_NAME"),
 		AppPort: os.Getenv("APP_PORT"),
 		AppTimeZone: os.Getenv("APP_TIMEZONE"),
@@ -68,6 +74,7 @@ func InitConfig(mode string) (*Config, error) {
 		LogFilePath: os.Getenv("LOG_FILE_PATH"),
 		LogFileName: os.Getenv("LOG_FILE_NAME"),
 		LogTimestampFmt: os.Getenv("LOG_TIMESTAMP_FMT"),
+		LogLevel: os.Getenv("LOG_LEVEL"),
 	}
 
 
@@ -83,9 +90,15 @@ func InitConfig(mode string) (*Config, error) {
 		return nil, err
 	}
 
-	config.LogRotationTime, err = strconv.Atoi(os.Getenv("LOG_ROTATION_TIME"))
+	config.LogMaxBackups, err = strconv.Atoi(os.Getenv("LOG_MAX_BACKUPS"))
 	if err != nil {
 		log.Fatalf("Fail to parse log rotation time");
+		return nil, err
+	}
+
+	config.LogMaxSize, err = strconv.Atoi(os.Getenv("LOG_MAX_SIZE"))
+	if err != nil {
+		log.Fatalf("Fail to parse log max size");
 		return nil, err
 	}
 

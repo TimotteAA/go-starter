@@ -5,6 +5,7 @@ import (
 
 	"github.com/gomodule/redigo/redis"
 	"github.com/sirupsen/logrus"
+	"gorm.io/gorm"
 )
 
 var (
@@ -14,4 +15,6 @@ var (
 	SysLogger *logrus.Logger
 	// Redis链接
 	Redis redis.Conn
+	// 数据库
+	DB *gorm.DB
 )

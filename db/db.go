@@ -2,15 +2,12 @@ package db
 
 import (
 	"fmt"
-	"log"
-	"os"
 	"time"
 
 	"github.com/TimotteAA/go-starter/config"
 	"github.com/TimotteAA/go-starter/global"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
-	"gorm.io/gorm/logger"
 )
 
 func New(config *config.Config) {
@@ -54,16 +51,17 @@ func buildConfig() *gorm.Config {
 	return &gorm.Config{
 		SkipDefaultTransaction: true,
 		PrepareStmt: true,
-		Logger: logger.New(
-			log.New(os.Stdout, "\r\n", log.LstdFlags), // io writer
-			logger.Config{
-				SlowThreshold:              2 * time.Second,   // Slow SQL threshold
-				LogLevel:                   logger.Silent, // Log level
-				IgnoreRecordNotFoundError: false,           // Ignore ErrRecordNotFound error for logger
-				ParameterizedQueries:      true,           // Don't include params in the SQL log
-				Colorful:                  false,          // Disable color
-			},
-		),
+		// Logger: logger.New(
+		// 	log.New(os.Stdout, "\r\n", log.LstdFlags), // io writer
+		// 	logger.Config{
+		// 		SlowThreshold:              2 * time.Second,   // Slow SQL threshold
+		// 		LogLevel:                   logger.Silent, // Log level
+		// 		IgnoreRecordNotFoundError: false,           // Ignore ErrRecordNotFound error for logger
+		// 		ParameterizedQueries:      true,           // Don't include params in the SQL log
+		// 		Colorful:                  false,          // Disable color
+		// 	},
+		// ),
+		Logger: newLogger(),
 	}
 }
 
